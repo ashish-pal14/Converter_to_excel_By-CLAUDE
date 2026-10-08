@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDF to Excel</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2317663F'/><path d='M8 10h16M8 16h16M8 22h16M14 6v20' stroke='white' stroke-width='2'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <h1>Turn any PDF into a spreadsheet</h1>
+      <p>Digital or scanned, one page or three hundred. Tables come out as real numbers and dates you can sort and add up.</p>
+    </header>
+
+    <section class="sheet" id="sheet" aria-label="Upload a PDF">
+      <div class="sheet-cols" aria-hidden="true"><span></span><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span></div>
+
+      <label class="drop" id="drop" for="file" tabindex="0">
+        <input type="file" id="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp,application/pdf,image/*" hidden>
+        <span class="drop-title" id="drop-title">Drop a PDF here, or choose a file</span>
+        <span class="drop-hint" id="drop-hint">PDF, PNG, JPG or TIFF</span>
+      </label>
+
+      <div class="status" id="status" hidden>
+        <div class="status-line">
+          <span id="status-file" class="status-file"></span>
+          <span id="status-msg" class="status-msg"></span>
+        </div>
+        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="bar"><span id="bar-fill"></span></div>
+      </div>
+    </section>
+
+    <details class="settings" id="settings">
+      <summary>Conversion settings</summary>
+      <div class="settings-grid">
+        <fieldset>
+          <legend>File type</legend>
+          <label><input type="radio" name="output" value="xlsx" checked> Excel (.xlsx)</label>
+          <label><input type="radio" name="output" value="csv"> CSV (zipped)</label>
+          <label><input type="radio" name="output" value="json"> JSON</label>
+        </fieldset>
+        <fieldset>
+          <legend>Layout</legend>
+          <label><input type="radio" name="layout" value="exact" checked> Exact copy, a sheet per page</label>
+          <label><input type="radio" name="layout" value="exact_single"> Exact copy, all pages on one sheet</label>
+          <label><input type="radio" name="layout" value="tables"> Tables only, plus a Transactions list</label>
+        </fieldset>
+        <fieldset>
+          <legend>Dates like 03/04/2024</legend>
+          <label><input type="radio" name="date_order" value="DMY" checked> Day first (3 April)</label>
+          <label><input type="radio" name="date_order" value="MDY"> Month first (March 4)</label>
+        </fieldset>
+        <div class="fields">
+          <label class="field">Pages
+            <input type="text" id="pages" placeholder="All pages, or e.g. 1-3, 7" inputmode="numeric" autocomplete="off">
+          </label>
+          <label class="field">Text language for scans
+            <select id="ocr_lang"><option value="eng">English</option></select>
+          </label>
+          <label class="field" id="password-field">PDF password
+            <input type="password" id="password" placeholder="Only for locked PDFs" autocomplete="off">
+          </label>
+          <label class="check"><input type="checkbox" id="force_ocr"> Read every page as a scan</label>
+          <label class="check"><input type="checkbox" id="as_text"> Keep numbers and dates as text</label>
+        </div>
+      </div>
+    </details>
+
+    <section class="result" id="result" hidden aria-live="polite">
+      <div class="result-head">
+        <div>
+          <h2 id="result-title">Your spreadsheet is ready</h2>
+          <p id="result-summary" class="result-summary"></p>
+        </div>
+        <div class="result-actions">
+          <a class="button primary" id="download" href="#">Download Excel file</a>
+          <button class="button" id="again" type="button">Convert another file</button>
+        </div>
+      </div>
+      <ul class="pages" id="page-notes"></ul>
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <div class="preview-wrap"><table class="preview" id="preview"></table></div>
+      <p class="legend" id="legend" hidden><span class="swatch"></span>Highlighted cells were hard to read in the scan. Check them against the PDF.</p>
+    </section>
+
+    <section class="error" id="error" hidden role="alert">
+      <h2>That file could not be converted</h2>
+      <p id="error-msg"></p>
+      <button class="button" id="retry" type="button">Try again</button>
+    </section>
+
+    <footer class="foot">
+      Files are deleted automatically <span id="ttl">after an hour</span>. Nothing is kept after that.
+    </footer>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

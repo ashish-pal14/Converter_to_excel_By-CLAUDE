@@ -1,0 +1,13 @@
+# web
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+# PDF reading
+pymupdf>=1.24
+pdfplumber>=0.11
+# OCR and image processing (Tesseract itself is a system package, see Dockerfile/README)
+opencv-python-headless>=4.9
+pytesseract>=0.3.10
+numpy>=1.26
+# output
+openpyxl>=3.1

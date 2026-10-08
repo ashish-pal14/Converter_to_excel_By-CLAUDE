@@ -1,0 +1,15 @@
+services:
+  pdf2excel:
+    build:
+      context: .
+      args:
+        OCR_LANGS: "eng"          # e.g. "eng deu fra ara hin chi_sim"
+    ports:
+      - "8060:8000"
+    env_file: .env
+    volumes:
+      - jobs:/data
+    restart: unless-stopped
+
+volumes:
+  jobs:
